@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${titulo}"></title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+</head>
+
+<body>
+    <div layout:fragment="contenido">
+
+        <h4 th:if="${error == null}">¡Ha ocurrido un error inesperado en la aplicación! No se encontró ningún usuario.</h4>
+        <h4 th:if="${error == 'La página que buscas no se encontró.'}">Error 404: La página que buscas no se encontró.
+        </h4>
+        <h4 th:if="${error == 'Se ha producido un error interno en el servidor.'}">Error 500: Se ha producido un error
+            interno en el servidor.</h4>
+        
+
+    </div>
+    <script th:fragment="js"></script>
+</body>
+
+</html>

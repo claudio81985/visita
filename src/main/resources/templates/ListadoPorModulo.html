@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${titulo}"></title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css">
+</head>
+
+<body>
+    <div layout:fragment="contenido">
+
+        <div>
+            <h2>Internos del Módulo: <span th:text="${nombreModulo}"></span></h2>
+            <a th:href="@{'/pdf/generar?moduloId=' + ${idModulo}}" target="_blank">
+                <button>Generar PDF</button>
+            </a>
+            
+            <ul>
+                <li th:each="interno : ${internos}">
+                    <p th:text="${interno.nombreApellido + ' - ' + interno.dni}"></p>
+                    <!-- Agrega aquí cualquier otra información del interno que desees mostrar -->
+                </li>
+            </ul>
+        </div>
+        
+    </div>
+
+    <script th:fragment="js"></script>
+</body>
+
+</html>

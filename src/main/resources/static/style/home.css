@@ -1,0 +1,42 @@
+/* Estilos CSS personalizados para hacer el buscador más delgado */
+#search-form {
+    margin-bottom: 0;
+}
+
+#search-bar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-group {
+    flex-grow: 1;
+}
+
+.form-control {
+    border-radius: 0;
+    padding: 0.5rem 0.3rem;
+}
+
+.btn {
+    border-radius: 0;
+    padding: 0.15rem 0.3rem;
+
+}
+
+.completado {
+    color: green;
+}
+
+.pendiente {
+    color: red;
+}
+
+#img {
+    border-radius: 80%;
+    border: 6px solid #eaeaea;
+}
+
+.table-full-width {
+    width: 100%;
+}
+

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${titulo}"></title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/style/home.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+    <div layout:fragment="contenido" style="margin: 10px;">
+
+        <hr>
+        <div class="alert alert-danger" th:if="${errorArchivos}">
+            <p th:text="${errorArchivos}"></p>
+        </div>
+
+        <h2 th:text="${titulo}" class="text-center" style="font-family: arial narrow bold"></h2>
+
+        <div class="form " style="width: 100hv; margin: 20px; ">
+            <div class="tab-content">
+
+                <form th:action="@{'/internos/' + ${internoId} + '/visitas/guardar'}" class="was-validated"
+                    method="post" th:object="${visita}" enctype="multipart/form-data">
+
+
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col col-3">
+                                <div class="upload" for="imagen">
+                                    <span class="text-center"
+                                        style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Ingrese
+                                        foto del Detenido</span>
+                                    <img th:src="@{/img/foto.jpg}" width=100 height=100 alt="">
+                                    <div class="round">
+                                        <input id="file" type="file" name="file" class="md-form rounded"
+                                            onchange="previewImage(this, [256], 4);">
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                            </div>
+
+                            <div class="col col-8 shadow p-3 mb-5 bg-body rounded" style="padding: 0; margin: 0;">
+                                <div class="card">
+                                    <div class="row">
+                                        <div class="row mt-3 text-center">
+                                            <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="nom" class="form-label mt-3">NOMBRE</label>
+                                                    <input placeholder=" NOMBRE " required id="nom" type="text"
+                                                        class="form-control" th:field="*{nombre}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger" th:errors="*{nombre}"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="ape" class="form-label mt-3">APELLIDO</label>
+                                                    <input placeholder=" APELLIDO " required id="ape" type="text"
+                                                        class="form-control" th:field="*{apellido}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger"
+                                                        th:errors="*{apellido}"></small>
+                                                </div>
+                                            </div>  
+                                            <div class="col col-12">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="dom" class="form-label mt-3">DOMICILIO</label>
+                                                    <input placeholder=" DOMICILIO " required id="dom" type="text"
+                                                        class="form-control" th:field="*{domicilio}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger"
+                                                        th:errors="*{domicilio}"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="fechaNac" class="form-label mt-3">FECHA DE
+                                                        NACIMIENTO</label>
+                                                    <input required id="dfechaNacom" type="date" class="form-control"
+                                                        th:field="*{fechaNacimiento}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger"
+                                                        th:errors="*{fechaNacimiento}"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="doc" class="form-label mt-3">DNI</label>
+                                                    <input placeholder=" DNI " required id="doc" type="text"
+                                                        class="form-control" th:field="*{dni}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger" th:errors="*{dni}"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="genero" class="form-label  mt-3">GENERO</label>
+                                                    <select required name="genero" id="genero" class="form-select">
+                                                        <option value="" disabled selected>Seleccionar</option>
+                                                        <option th:each="g : ${generos}" th:value="${g.id}"
+                                                            th:text="${g}"></option>
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="parentesco" class="form-label  mt-3">PARENTESCO</label>
+                                                    <select required name="parentesco" id="parentesco"
+                                                        class="form-select">
+                                                        <option value="" disabled selected>Seleccionar</option>
+                                                        <option th:each="p : ${parentescos}" th:value="${p.id}"
+                                                            th:text="${p}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="edad" class="form-label mt-3">EDAD</label>
+                                                    <input placeholder=" EDAD " required id="edad" type="text"
+                                                        class="form-control" th:field="*{edad}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger" th:errors="*{edad}"></small>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col col-6">
+                                                <div class="form-group p-1 mt-2">
+                                                    <label for="fechaVis" class="form-label mt-3">FECHA DE
+                                                        VISITA</label>
+                                                    <input required id="fechaVis" type="date" class="form-control"
+                                                        th:field="*{fechaVis}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger"
+                                                        th:errors="*{fechaVis}"></small>
+                                                </div>
+                                            </div> -->
+                                            <!-- <div class="col col-12 p-1 mt-2">
+                                                <div class="form-group" style="margin: 15px;">
+                                                    <label for="visitaIntima" class="mb-2">VISITA INTIMA:</label>
+                                                    <select id="visitaIntima" name="visitaIntima" required
+                                                        class="form-control" onchange="toggleArchivos(this.value)">
+                                                        <option value="" disabled selected>Seleccionar según corresponda
+                                                        </option>
+                                                        <option value="SI">SI</option>
+                                                        <option value="NO">NO</option>
+                                                    </select>
+                                                </div>
+                                                <div style="display: none;">
+                                                    <div class="row shadow p-1  mt-2">
+                                                        <hr>
+                                                        <div class="upload col col-6">
+                                                            <label for="interno" class="form-label mt-3">NOMBRE DEL
+                                                                INTERNO</label>
+                                                            <input placeholder=" NOMBRE DEL INTERNO " required
+                                                                id="interno" type="text" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+ -->
+                                            <div class="card-footer align-items-center">
+                                                <div class="pt-2">
+                                                    <button type="submit"
+                                                        class="btn btn-outline-primary btn-dark float-end ms-2">
+                                                        Guardar
+                                                    </button>
+                                                    <a href="/home"
+                                                        class="btn btn-outline-secondary btn-dark float-end text-white">
+                                                        Cancelar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <input type="hidden" id="internoId" name="internoId" th:value="${internoId}" />
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div th:if="${success}" class="alert alert-success">
+                    <p th:text="${success}"></p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script th:fragment="js" th:scr="@{/js/home.js}"></script>
+
+
+</body>
+
+</html>

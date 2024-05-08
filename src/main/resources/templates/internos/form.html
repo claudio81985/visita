@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}"></title>
+    <link rel="stylesheet" th:href="@{/style/foto.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link href="https://bootswatch.com/5/morph/bootstrap.min.css" rel="stylesheet"> -->
+
+
+</head>
+
+<body>
+    <div layout:fragment="contenido">
+        <hr>
+        <div class="alert alert-danger" th:if="${errorArchivos}">
+            <p th:text="${errorArchivos}"></p>
+        </div>
+
+        <h2 th:text="${titulo}" class="text-center" style="font-family: arial narrow bold"></h2>
+
+        <div class="form " style="width: 100hv; margin: 20px; ">
+            <div class="tab-content">
+
+                <form th:action="@{/internos/guardar}" class="was-validated" method="post" th:object="${interno}">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col col-12 shadow p-3 mb-5 bg-body rounded" style="padding: 0; margin: 0;">
+                                <div class="card">
+                                    <div class="raw" style="padding: 5px; margin: 5px; text-transform:uppercase;">
+                                        <div class="row mt-3 ">
+                                            <div class="col col-5">
+                                                <div class="form">
+                                                    <label for="name" class="form-label">Nombre/s y Apellido</label>
+                                                    <input placeholder="NOMBRE Y APELLIDO" required id="name"
+                                                        type="text" class="form-control" th:field="*{nombreApellido}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger"
+                                                        th:errors="*{nombreApellido}"></small>
+                                                </div>
+                                            </div>
+                                            <div class="col col-3">
+                                                <div class="form-group">
+                                                    <label for="iden" class="form-label">Dni</label>
+                                                    <input placeholder="00000000" required id="iden" type="text"
+                                                        class="form-control" th:field="*{dni}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger" th:errors="*{dni}"></small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col col-6">
+                                                <div class="form">
+                                                    <label for="modulo" class="form-label  mt-3">MODULO</label>
+                                                    <select required name="modulo" id="modulo" class="form-select">
+                                                        <option value="" disabled selected>Seleccionar</option>
+                                                        <option th:each="m : ${modulos}" th:value="${m.id}"
+                                                            th:text="${m.nombre}"
+                                                            th:selected="${interno.modulo != null && m.id == interno.modulo.id}">
+                                                            <!-- Verifica si interno.modulo no es nulo antes de acceder a su id -->
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer align-items-center">
+                                <div class="d-grid gap-2 col-6 mx-auto">
+                                    <button title="aceptar" type="submit"
+                                        class="bi bi-person-check-fill btn btn-success">
+                                    </button>
+                                    <button title="cancelar" href="/home" class="bi bi-x-square btn btn-danger">
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div th:if="${success}" class="alert alert-success">
+                <p th:text="${success}"></p>
+            </div>
+        </div>
+    </div>
+
+    <script th:fragment="js"></script>
+
+</body>
+
+</html>

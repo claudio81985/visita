@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${titulo}"></title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/style/home.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            background-color: rgba(255, 255, 255, 0.274);
+            /* Fondo blanco con 50% de opacidad */
+            background-blend-mode: overlay;
+            /* Mezcla la imagen de fondo con el color de fondo */
+            background-image: url('/img/fondo.jpg');
+            background-size: cover;
+            /* Escala la imagen al 100% */
+            background-size: cover;
+            /* Fija la imagen en la ventana */
+            background-attachment: fixed;
+            /* Ajusta la imagen para cubrir todo el fondo */
+            background-position: center;
+            /* Centra la imagen en el fondo */
+            background-repeat: no-repeat;
+            /* Evita que la imagen se repita */
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div layout:fragment="contenido" style="margin: 10px;">
+
+        <div>
+            <H4 class="text-center" style="font-family:'Arial Narrow', Arial; font-size: 30px; color: black;">
+                REGISTRO DE VISITAS COMPLEJO PENITENCIARIO II</H4>
+            <form id="search-form" action="">
+                <div id="search-bar" class="input-group">
+                    <input class="form-control form-control-sm" type="search" placeholder="¿Qué estás buscando?" />
+                    <button type="submit" class="btn btn-secondary btn-acciones-principales btn-sm">Buscar</button>
+                </div>
+            </form>
+            <br>
+
+            <div class="card-footer align-items-center">
+                <div class="pt-2">
+
+
+                </div>
+            </div>
+            <br>
+
+            <table
+                class="table table table-borderedtable-hover border border-1 caption-top shadow p-3 mb-5 bg-body-tertiary rounded table-full-width"
+                id="tablaHome">
+                <thead>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>Nombre y Apellido</th>
+                        <th>Dni</th>
+                        <th>Modulo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr th:each="interno : ${internos}">
+                        <td th:text="${interno.id}"></td>
+                        <td th:text="${interno.nombreApellido}"></td>
+                        <td th:text="${interno.dni}"></td>
+                        <td th:text="${interno.modulo}"></td>
+
+
+                        <td>
+                            <a class="btn btn-sm btn-warning" title="Ver" style="display: inline-block;"
+                                th:href="@{/interno/{id}/detalle(id=${interno?.id})}">
+
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+
+
+                            <a class="btn btn-sm btn-primary"
+                                th:href="@{/internos/{id}/visitas/nuevo(id=${interno.id})}">
+                                <i class="bi bi-person-fill"></i>
+                            </a>
+
+                            <button type="button" class="btn btn-sm btn-success open-modal" data-bs-toggle="modal"
+                                th:data-bs-target="'#Modal-' + ${interno.id}" title="Cargar Elemento"
+                                th:onclick="'openModal(\'' + ${interno.id} + '\')'">
+                                <i class="bi bi-folder-plus"></i>
+                            </button>
+
+
+                            <div class="modal fade" th:id="'Modal-' + ${interno.id}" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" th:id="exampleModalLabel">Cargar Elemento
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form th:action="@{'/guardar-elemento/' + ${interno.id}}" method="POST"
+                                                enctype="multipart/form-data" th:object="${elemento}">
+                                                <input type="hidden" name="internoId" value="${internoId}" />
+                                                <div class="form-group mb-3">
+                                                    <div class="form-group">
+                                                        <label for="name" class="form-label">NOMBRE</label>
+                                                        <input placeholder="NOMBRE" required id="name" type="text"
+                                                            class="form-control" th:field="*{nombre}"
+                                                            th:errorClass="'form-control alert-warning'" />
+                                                        <small class="form-label text-danger"
+                                                            th:errors="*{nombre}"></small>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="marca" class="form-label mt-3">MARCA / MODELO</label>
+                                                    <input placeholder=" MARCA / MODELO " required id="marca"
+                                                        type="text" class="form-control" th:field="*{tipo}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger" th:errors="*{tipo}"></small>
+                                                </div>
+
+                                                <div class="form-group mb-3">
+                                                    <label for="descripcion" class="form-label mt-3">DESCRIPCIÓN</label>
+                                                    <textarea placeholder=" DESCRIPCION " required id="descripcion"
+                                                        type="text-Area" class="form-control" th:field="*{descripcion}"
+                                                        th:errorClass="'form-control alert-warning'"></textarea>
+                                                    <small class="form-label text-danger"
+                                                        th:errors="*{descripcion}"></small>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="fechaAlta" class="form-label mt-3">FECHA DE ALTA</label>
+                                                    <input required id="fechaAlta" type="date" class="form-control"
+                                                        th:field="*{fechaAlta}"
+                                                        th:errorClass="'form-control alert-warning'" />
+                                                    <small class="form-label text-danger"
+                                                        th:errors="*{fechaAlta}"></small>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label>INGRESE LA FACTURA</label>
+                                                    <input type="file" name="file_2" id="factura"
+                                                        accept="application/pdf" onchange="checkFiles()">
+                                                </div>
+
+
+
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop">
+                                <i class="bi bi-trash"></i>
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Deshabilitar Interno</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form th:action="@{/internos/borrar/{id}(id=${interno.id})}" method="POST">
+                                                <input type="hidden" name="internoId" th:value="${interno.id}" />
+                                                <div class="form-group mb-3">
+                                                    <label for="motivo" class="form-label mt-3">MOTIVO</label>
+                                                    <select required name="motivo" id="motivo" class="form-select">
+                                                        <option value="" disabled selected>Seleccionar</option>
+                                                        <option th:each="m : ${motivos}" th:value="${m.id}"
+                                                            th:text="${m}"></option>
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-sm btn-success" title="Borrar"
+                                                        onclick="return confirm('¿Estás seguro de deshabilitar el Registro?')">
+                                                        <i class="bi bi-check-circle"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <a th:href="@{/internos/borrar/} + ${interno.id}" class="btn btn-sm btn-danger" title="Borrar"
+                                    onclick="return confirm('¿Estás seguro de deshabilitar el Registro?')">
+                                    <i class="bi bi-trash"></i>
+                                </a> -->
+                            <a th:href="@{/internos/editar/} + ${interno.id}" class="btn btn-sm btn-secondary"
+                                title="Editar">
+                                <i class="bi bi-pen"></i>
+                            </a>
+                        </td>
+
+
+                    </tr>
+                </tbody>
+                <div id="paginacion">
+                    <button class="bi bi-caret-left-fill btn-outline-success" id="anterior"
+                        style="border-radius: 50px; border: 1px solid #eaeaea;"></button>
+                    <span id="paginaActual" style="margin: 0 3px;">1</span>
+                    <button class="bi bi-caret-right-fill btn-outline-success" id="siguiente"
+                        style="border-radius: 50px; border: 1px solid #eaeaea;"></button>
+                </div>
+
+            </table>
+        </div>
+        <!-- footer -->
+        <footer id=" footer" style="padding:20px; font-family:arial narrow ;color: black;">
+            <div class="footer-top">
+                <div>
+                    <a style="display: inline-flex; float: right;">
+                        <img alt="LOGO" th:src="@{/img/banderaArgentina.jpg}" id="img" height="45" />
+                    </a>
+                    <a style="display: inline-flex; float: left; ">
+                        <img alt="LOGO" th:src="@{/img/banderaChaco.jpg}" id="img" height="45" />
+                    </a>
+                </div>
+                <div class="container py-4 text-center">
+                    <div class="copyright">
+                        &copy; Copyright <strong><span>Complejo Penitenciario II</span></strong> Servicio Penitenciario
+                        Provincial
+                    </div>
+                    <div class="credits">
+                        Designed by <a>Claudio Marangoni</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script th:fragment="js" th:src="@{/js/home.js}"></script>
+    <script>
+        const exampleModal = document.getElementById('exampleModal');
+        if (exampleModal) {
+            exampleModal.addEventListener('show.bs.modal', event => {
+                // Button that triggered the modal
+                const button = event.relatedTarget;
+                // Extract info from data-bs-* attributes
+                const internoId = button.getAttribute('data-bs-interno-id');
+
+                // Update the modal's content with the internoId
+                const modalTitle = exampleModal.querySelector('.modal-title');
+                modalTitle.textContent = `Cargar Elemento - ID: ${internoId}`;
+            });
+        }
+    </script>
+
+    <script>
+        const staticBackdropModal = document.getElementById('staticBackdrop');
+        if (staticBackdropModal) {
+            staticBackdropModal.addEventListener('show.bs.modal', event => {
+                // Button that triggered the modal
+                const button = event.relatedTarget;
+                // Extract info from data-bs-* attributes
+                const recipient = button.getAttribute('data-bs-whatever');
+                // If necessary, you could initiate an Ajax request here
+                // and then do the updating in a callback.
+
+                // Update the modal's content.
+                const modalTitle = staticBackdropModal.querySelector('.modal-title');
+                const modalBodyInput = staticBackdropModal.querySelector('.modal-body input');
+
+                modalTitle.textContent = `New message to ${recipient}`;
+                modalBodyInput.value = recipient;
+            });
+        }
+    </script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org/"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <META http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device, initial-scale=1.0">
+    <title th:text="${titulo}"></title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+
+
+
+<body>
+    <div layout:fragment="contenido">
+
+        <a class="btn btn-outline-primary float-end" th:href="@{/home}">
+            Volver</a>
+
+        <h1 class="text-center">Detalle del Interno</h1>
+
+        <h3 class="mt-4 mb-3">Datos Personales:</h3>
+
+        <p>Nombre: <span th:text="${interno.nombreApellido}"></span></p>
+        <p>DNI: <span th:text="${interno.dni}"></span></p>
+        <p>Sector de Alojamiento: <span th:text="${interno.modulo}"></span></p>
+
+        <h3 class="mt-4 mb-3 text-center">Datos de Visitas:</h3>
+
+        <table
+            class="table table table-borderedtable-hover border border-1 caption-top shadow p-3 mb-5 bg-body-tertiary rounded table-full-width">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Domicilio</th>
+                    <th>Dni</th>
+                    <th>edad</th>
+                    <th>Genero</th>
+                    <th>Parentesco</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Cargar Fecha</th>
+                    <th>Ultima fecha de Visita</th>
+                    <th>Calendario Completo</th>
+                    <th>Ver Foto</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="visita : ${visitas}">
+                    <td th:text="${visita.id}"></td>
+                    <td th:text="${visita.nombre}"></td>
+                    <td th:text="${visita.apellido}"></td>
+                    <td th:text="${visita.domicilio}"></td>
+                    <td th:text="${visita.dni}"></td>
+                    <td th:text="${visita.edad}"></td>
+                    <td th:text="${visita.genero}"></td>
+                    <td th:text="${visita.parentesco}"></td>
+                    <td th:text="${visita.fechaNacimiento}"></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-success open-modal" data-bs-toggle="modal"
+                            th:data-bs-target="'#Modal-' + ${visita.id}" title="Cargar Fecha"
+                            th:onclick="'openModal(\'' + ${visita.id} + '\')'">
+                            <i class="bi bi-calendar-day-fill"></i>
+                        </button>
+
+
+                        <div class="modal fade" th:id="'Modal-' + ${visita.id}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" th:id="exampleModalLabel">Cargar Fecha
+                                        </h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form th:action="@{'/guardar-fecha/' + ${visita.id}}" method="POST"
+                                            th:object="${fechaVisita}">
+                                            <input type="hidden" name="visitaId" value="${visitaId}" />
+                                            <div class="form-group mb-3">
+
+                                                <label for="tipoVisita" class="form-label  mt-3">TIPO DE VISITA</label>
+                                                <select required name="tipoVisita" id="tipoVisita" class="form-select">
+                                                    <option value="" disabled selected>Seleccionar</option>
+                                                    <option th:each="t : ${tipoVisitas}" th:value="${t.id}"
+                                                        th:text="${t}"></option>
+                                                </select>
+
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label for="fechaNueva" class="form-label mt-3">Nueva Fecha de
+                                                    Visita</label>
+                                                <input required id="fechaNueva" type="date" class="form-control"
+                                                    th:field="*{fecha}" th:errorClass="'form-control alert-warning'" />
+                                                <small class="form-label text-danger" th:errors="*{fecha}"></small>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                    <td>
+                        <span th:if="${visita.fechasVisitas.size() > 0}">
+                            <span th:text="${visita.fechasVisitas[visita.fechasVisitas.size() - 1].fecha}"></span>
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-info open-modal" data-bs-toggle="modal"
+                            th:data-bs-target="'#ModalFechas-' + ${visita.id}" title="Ver Fechas"
+                            th:onclick="'openModalFechas(\'' + ${visita.id} + '\')'">
+                            <i class="bi bi-calendar2-week-fill"></i>
+                        </button>
+
+                        <div class="modal fade" th:id="'ModalFechas-' + ${visita.id}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" th:id="exampleModalLabel">
+                                            Nombre de Visita: <span th:text="${visita.nombre}"></span> <span
+                                                th:text="${visita.apellido}"></span></h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <li th:each="fecha : ${visita.fechasVisitas}">
+                                            <span th:text="${fecha.fecha}"></span> - <span
+                                                th:text="${fecha.tipoVisita}"></span>
+                                        </li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </td>
+
+                    <td>
+                        <img th:src="@{/documentos/{nombreApellido}-{idInterno}/{nombreVisita}/{nombreImagen}(nombreApellido=${interno.nombreApellido}, idInterno=${interno.id}, nombreVisita=${visita.nombre}, nombreImagen=${visita.imagen})}"
+                            alt="Foto de la Visita" style="max-width: 100px; max-height: 100px;">
+                    </td>
+
+
+
+
+                </tr>
+            </tbody>
+        </table>
+
+
+        <h3 class="mt-4 mb-3 text-center">Datos de Elementos:</h3>
+        <table
+            class="table table table-borderedtable-hover border border-1 caption-top shadow p-3 mb-5 bg-body-tertiary rounded table-full-width">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                    <th>fecha de Alta</th>
+                    <th>Factura</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="elemento : ${elementos}">
+                    <td th:text="${elemento.id}"></td>
+                    <td th:text="${elemento.nombre}"></td>
+                    <td th:text="${elemento.tipo}"></td>
+                    <td th:text="${elemento.descripcion}"></td>
+                    <td th:text="${elemento.fechaAlta}"></td>
+                    <td>
+                        <a th:href="@{/documentos/{nombreApellido}-{idInterno}/{nombreElemento}/{nombreFactura}(nombreApellido=${interno.nombreApellido}, idInterno=${interno.id}, nombreElemento=${elemento.nombre}, nombreFactura=${elemento.factura})}"
+                            target="_blank" class="bi bi-filetype-pdf fs-4" style="background-color: blueviolet;"></a>
+                    </td>
+
+                    <!--VERIFICAR DESPUES SI FUNCIONA-->
+                    <!-- <td>
+                        <iframe
+                            th:src="'https://docs.google.com/viewer?url=/documentos/' + ${interno.nombreApellido} + '-' + ${interno.id} + '/' + ${elemento.nombre} + '/' + ${elemento.factura} + '&embedded=true'"
+                            style="width:80px; height:80px;" frameborder="0"></iframe>
+                    </td> -->
+
+
+
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+    </div>
+    <script th:fragment="js"></script>
+    <script>
+        const exampleModal = document.getElementById('exampleModal');
+        if (exampleModal) {
+            exampleModal.addEventListener('show.bs.modal', event => {
+                // Button that triggered the modal
+                const button = event.relatedTarget;
+                // Extract info from data-bs-* attributes
+                const visitaId = button.getAttribute('data-bs-visita-id');
+
+
+                const modalTitle = exampleModal.querySelector('.modal-title');
+                modalTitle.textContent = `Cargar Fecha - ID: ${visitaId}`;
+            });
+        }
+    </script>
+
+    <script>
+        const modalFechas = document.getElementById('exampleModal');
+        if (modalFechas) {
+            modalFechas.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget;
+                const visitaId = button.getAttribute('data-bs-visita-id');
+                const modalTitle = modalFechas.querySelector('.modal-title');
+                modalTitle.textContent = `Fechas de Visita - ID: ${visitaId}`;
+            });
+        }
+    </script>
+
+</body>
+
+</html>
